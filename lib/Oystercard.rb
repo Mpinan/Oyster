@@ -2,6 +2,7 @@
 class Oystercard
     MAXIMUM_BALANCE = 100
     MINIMUM_BALANCE = 1
+    MIN_JOURNEY_COST = 5
     attr_reader :balance
   def initialize
     @balance = 0
@@ -27,7 +28,8 @@ class Oystercard
 
   def touch_out
     #Should deduct Journey_cost from balance when touch out
-    #Sample: @Balance - Journey_cost 
+    #Sample: @Balance - MIN_JORNEY_COST 
+    deduct(MIN_JOURNEY_COST)
     @in_journey = false
   end
 end

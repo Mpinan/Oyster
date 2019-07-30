@@ -14,20 +14,20 @@ describe Oystercard do
       it 'can top up a balance' do 
         expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
       end
-      #A more complicated way, but still efective:
-      #maximum_balance = Oystercard::MAXIMUM_BALANCE
-      #subject.top_up(maximum_balance)
-      #expect{ subject.top_up 1 }.to raise_error 'Maximum balance exceeded'
-      it 'raise an error if top_up exceed the maximum balance' do
-        expect{subject.top_up(101)}.to raise_error ('You cannot put more money')
-    end
+      #raise an error if top_up exceed the maximum balance'
+      it {expect{subject.top_up(101)}.to raise_error ('You cannot put more money')}
+ 
   end
   context '.deduct' do
     #Substract an argument amount
     it 'deduct money from balance' do
       expect(subject).to respond_to(:deduct).with(1).argument
     end
-    
+    it 'deduct amount from balance when touch out' do
+      subject.top_up(5)
+      subject.touch_in
+      expect{ subject.touch_out }.to change{ subject.balance }.by (-Oystercard::MIN_JOURNEY_COST)
+    end
   end
   context '#in_journey?' do
     #Subject creates a new instances class everytime you write It
@@ -41,10 +41,6 @@ describe Oystercard do
     it 'raise an error if not enough balance' do
         expect{subject.touch_in}.to raise_error ('Insuficient balance')
     end
-    #it 'substract amount from balance' {
-    #subject = Oystercard.new
-    #subject.top_up(50)
-    #expect(subject.touch_out).to eq(balance - 5)
   end
 end
 
