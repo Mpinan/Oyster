@@ -1,46 +1,52 @@
 require 'Oystercard'
 describe Oystercard do
-  #Checks that the methods are working
-  it {expect(Oystercard.new).to respond_to(:balance)}
-  it {expect(Oystercard.new).to respond_to(:in_journey?)}
-  #The amount of money you start with, which is 0
-  it {expect(subject.balance).to eq(0)}
-  #What goes on in top up method
-  context '.top up' do
-      #Checks that one does not exceed 
-      #the amount of money you put in the card.
-      #Raises an error when you put more than 100
-      it { expect(subject).to respond_to(:top_up).with(1).arguments }
-      it 'can top up a balance' do 
-        expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
+  let(:station){ double :station }
+  it 'stores the entry station' do
+    subject.top_up(5)
+    subject.touch_in(station)
+    expect(subject.entry_station).to eq station
+  end
+    it 'has a balance of zero' do
+        expect(subject.balance).to eq 0
+    end
+    describe '#top up' do
+        it { is_expected.to respond_to(:top_up).with(1).argument }
+        it 'can top up the balance' do
+            expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
+        end
+        it 'raises an error if the maximum balance is exceeded' do
+            maximum_balance = Oystercard::MAXIMUM_BALANCE
+            subject.top_up maximum_balance
+            expect{ subject.top_up 1 }.to raise_error 'Maximum balance of #{maximum_balance} exceeded'
+        end
+    end
+    describe '#touch_in' do
+      it 'can touch in' do
+        subject.top_up(5)
+        subject.touch_in(station)
+        expect(subject).to be_in_journey
       end
-      #raise an error if top_up exceed the maximum balance'
-      it {expect{subject.top_up(101)}.to raise_error ('You cannot put more money')}
- 
-  end
-  context '.deduct' do
-    #Substract an argument amount
-    it 'deduct money from balance' do
-      expect(subject).to respond_to(:deduct).with(1).argument
+      it 'wont be able to touch in, insufficient balance' do
+        expect{ subject.touch_in(station) }.to raise_error 'Insufficient balance'
+      end
     end
-    it 'deduct amount from balance when touch out' do
-      subject.top_up(5)
-      subject.touch_in
-      expect{ subject.touch_out }.to change{ subject.balance }.by (-Oystercard::MIN_JOURNEY_COST)
+    describe '#touch_out' do
+      it 'can touch out' do
+        subject.top_up(5)
+        subject.touch_in(station)
+        subject.touch_out
+        expect(subject).not_to be_in_journey
+      end
+      it 'charges minimun fare when touch out' do
+        subject.top_up(5)
+        subject.touch_in(station)
+        expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUN_FAIR )
+      end
     end
-  end
-  context '#in_journey?' do
-    #Subject creates a new instances class everytime you write It
-    it {
-      subject = Oystercard.new
-      subject.top_up(5)
-
-      expect(subject.touch_in).to be(true)
-    }
-    it {expect(subject.touch_out).to be(false)}
-    it 'raise an error if not enough balance' do
-        expect{subject.touch_in}.to raise_error ('Insuficient balance')
+    describe '#in_journey?' do
+      it 'is initially not in a journey' do
+        expect(subject).not_to be_in_journey
+      end
     end
-  end
 end
 

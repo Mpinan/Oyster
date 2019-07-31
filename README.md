@@ -21,14 +21,4 @@ Describes the funcionallity of an Oyster
 - 11. I need a penalty charge deducted if I fail to touch in or out
 - 12. I need to have the correct fare calculated
 
-## Posible methods/variables
-- card = Card.new
-- card.balance = 0
-- MAXIMUM_BALANCE = 100
-- card.deduct
-- card.touch_in
-- card.touch_out
-- JOURNEY_COST = 5
-- [[station1, station2],[station3, station4]]
-- PENALTY_CHARGE = 5
 
