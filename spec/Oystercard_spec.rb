@@ -1,6 +1,6 @@
 require 'Oystercard'
 describe Oystercard do
-  let(:station){ double :station }
+  let(:station){ double(:station) }
   it 'stores the entry station' do
     subject.top_up(5)
     subject.touch_in(station)
@@ -40,7 +40,7 @@ describe Oystercard do
       it 'charges minimun fare when touch out' do
         subject.top_up(5)
         subject.touch_in(station)
-        expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUN_FAIR )
+        expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FAIR )
       end
     end
     describe '#in_journey?' do
