@@ -3,13 +3,12 @@ require_relative "Oystercard"
 
 class Journey
   PENALTY_FARE = 1
-
   def initialize
-    @journey_complete = false
+	@journey_complete = false
   end
 
   def complete?
-    @journey_complete
+    @journey_complete 
   end
 
   def finish(station)
