@@ -11,4 +11,6 @@ class JourneyLog
  def finish(station)
    @journeys << station
  end
+
+ def 
 end
